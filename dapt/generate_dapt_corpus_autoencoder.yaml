@@ -1,0 +1,2 @@
+clear_corpus_path: dapt_data/corpus.json
+pseudo_summary_path: dapt_data/generate_dapt_corpus_autoencoder.json
