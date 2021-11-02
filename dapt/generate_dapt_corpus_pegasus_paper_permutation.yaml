@@ -1,5 +1,5 @@
 clear_corpus_path: dapt_data/corpus.json
-pseudo_summary_path: dapt_data/generate_dapt_corpus_pegasus_paper_principal.json
+pseudo_summary_path: dapt_data/generate_dapt_corpus_pegasus_paper_permutation.json
 params:
   gsr: 0.2
   permute_method: all # source;target;all
