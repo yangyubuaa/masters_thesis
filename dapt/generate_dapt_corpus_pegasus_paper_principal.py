@@ -1,5 +1,5 @@
 '''
-使用pegasus原始论文的方法进行伪摘要数据集的构建，并进行dapt
+复现标准的pegasus原始论文的方法进行伪摘要数据集的构建，并进行dapt
 '''
 from bert4keras.snippets import text_segmentate
 import jieba
@@ -24,8 +24,10 @@ class PegasusPrincipalMethodGenerator:
     '''
     def __init__(self, config):
         self.config = config
-        self.clear_corpus_path = config["clear_corpus_path"]
         self.rouge = Rouge()
+        self.clear_corpus_path = self.config["clear_corpus_path"]
+        self.pseudo_summary_path = self.config["pseudo_summary_path"]
+        self.gsr = self.config["params"]["gsr"]
     
     def generate(self):
         '''调用函数进行伪摘要数据集生成
@@ -36,13 +38,12 @@ class PegasusPrincipalMethodGenerator:
         #     source, target = pseudo_summary(texts)
         #     D.append((source, target))
         # source, target = pseudo_summary(texts_list[0])
-        with open('abstract.json', 'a+', encoding='utf-8') as f:
+        with open(self.pseudo_summary_path, 'a+', encoding='utf-8') as f:
             for texts in tqdm(texts_list):
                 # 对每个裁判文书文本调用伪摘要生成代码
                 source, target = self.__pseudo_summary(texts)
                 print(source, "_____", target)
                 # 测试用
-                break
                 f.write(json.dumps([source, target], ensure_ascii=False) + '\n')
             # f.write(json.dumps([source, target], ensure_ascii=False) + '\n')
 
@@ -105,37 +106,60 @@ class PegasusPrincipalMethodGenerator:
     def __pseudo_summary(self, texts):
         """根据一段texts构建伪标签数据对
         """
-        print(texts)  # 测试用
+        # while True:
+        #     sims = []
+        #     # 对于输入的每一个句子
+        #     for i in source_idxs:
+        #         # 得到其他句子构成的索引
+        #         new_source_idxs = [j for j in source_idxs if j != i]
+        #         # 把当前扫描到的句子加入目标句子
+        #         new_target_idxs = sorted(target_idxs + [i])
+        #         # 构建样本进行rouge计算
+        #         new_source = self.__gather_join(texts, new_source_idxs)
+        #         new_target = self.__gather_join(texts, new_target_idxs)
+        #         sim = self.__compute_rouge(new_source, new_target, 'char')
+        #         # sim = pylcs.lcs(new_source, new_target)
+        #         sims.append(sim['rouge-l'])
+        #     new_idx = source_idxs[np.argmax(sims)]
+        #     source_idxs.remove(new_idx)
+        #     target_idxs = sorted(target_idxs + [new_idx])
+        #     source = self.__gather_join(texts, source_idxs)
+        #     target = self.__gather_join(texts, target_idxs)
+        #     if (
+        #         len(source_idxs) == 1 or
+        #         1.0 * len(target) / len(source) > summary_rate
+        #     ):
+        #         break
+        # if len(source) < len(target):
+        #     source, target = target, source
+        # return source, target
+        # print(texts)  # 测试用
         source_idxs, target_idxs = list(range(len(texts))), []
-        print(source_idxs)  # 测试用
-        while True:
-            sims = []
-            # 对于输入的每一个句子
-            for i in source_idxs:
-                # 得到其他句子构成的索引
-                new_source_idxs = [j for j in source_idxs if j != i]
-                # 把当前扫描到的句子加入目标句子
-                new_target_idxs = sorted(target_idxs + [i])
-                # 构建样本进行rouge计算
-                new_source = self.__gather_join(texts, new_source_idxs)
-                new_target = self.__gather_join(texts, new_target_idxs)
-                sim = self.__compute_rouge(new_source, new_target, 'char')
-                # sim = pylcs.lcs(new_source, new_target)
-                sims.append(sim['rouge-l'])
-            new_idx = source_idxs[np.argmax(sims)]
-            source_idxs.remove(new_idx)
-            target_idxs = sorted(target_idxs + [new_idx])
-            source = self.__gather_join(texts, source_idxs)
-            target = self.__gather_join(texts, target_idxs)
-            if (
-                len(source_idxs) == 1 or
-                1.0 * len(target) / len(source) > summary_rate
-            ):
-                break
-        if len(source) < len(target):
-            source, target = target, source
+        # print(source_idxs)  # 测试用
+        similarity = []
+        for idx in source_idxs:
+            # 得到除了idx句子的其他句子索引
+            new_source_idxs = [j for j in source_idxs if j!=idx]
+            new_source = self.__gather_join(texts, new_source_idxs)
+            new_target = self.__gather_join(texts, [idx])
+            # print(new_source)
+            # print(new_target)
+            sim = self.__compute_rouge(new_source, new_target, 'char')
+            # rouge的权重可以调整，当前平均，后续可以做改进实验
+            similarity.append(sum([v for k, v in sim.items()])/3)
+        # print(source_idxs, similarity)
+        pseudo_summary_nums = int(len(source_idxs) * self.gsr) + 2
+        # print(pseudo_summary_nums)
+        idx_similarity_pair = zip(similarity, source_idxs)
+        # print(sorted(idx_similarity_pair, reverse=True))
+        summary_idx = sorted([i[1] for i in sorted(idx_similarity_pair, reverse=True)[:pseudo_summary_nums]])
+        # print(summary_idx)
+        for s in summary_idx:
+            if s in source_idxs:
+                source_idxs.remove(s)
+        print(source_idxs, summary_idx)
+        source, target = self.__gather_join(texts, source_idxs), self.__gather_join(texts, summary_idx)
         return source, target
-
 
 if __name__=='__main__':
     with open(r'generate_dapt_corpus_pegasus_paper_principal.yaml', 'r', encoding='utf-8') as f:
