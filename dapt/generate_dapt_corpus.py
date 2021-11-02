@@ -14,11 +14,7 @@ t_maxlen = maxlen // 4
 s_maxlen = maxlen - t_maxlen
 
 
-# 计算rouge用
-rouge = Rouge()
-
-
-def compute_rouge(source, target, unit='word'):
+def compute_rouge(rouge, source, target, unit='word'):
     """计算rouge-1、rouge-2、rouge-l
     """
     if unit == 'word':
@@ -45,7 +41,7 @@ def corpus():
     """
     D = []
     temp = []
-    f = 'corpus.json'
+    f = 'dapt_data/corpus.json'
     with open(f, 'r', encoding='utf-8') as f:
         for l in f:
             l = json.loads(l)
@@ -74,7 +70,7 @@ def gather_join(texts, idxs):
     return ''.join([texts[i] for i in idxs])
 
 
-def pseudo_summary(texts):
+def pseudo_summary(texts, rouge):
     """构建伪标签摘要数据集
     """
     source_idxs, target_idxs = list(range(len(texts))), []
@@ -85,7 +81,7 @@ def pseudo_summary(texts):
             new_target_idxs = sorted(target_idxs + [i])
             new_source = gather_join(texts, new_source_idxs)
             new_target = gather_join(texts, new_target_idxs)
-            sim = compute_rouge(new_source, new_target, 'char')
+            sim = compute_rouge(rouge, new_source, new_target, 'char')
             # sim = pylcs.lcs(new_source, new_target)
             sims.append(sim['rouge-l'])
         new_idx = source_idxs[np.argmax(sims)]
@@ -105,6 +101,8 @@ def pseudo_summary(texts):
 
 if __name__=='__main__':
     D = []
+    # 计算rouge用
+    rouge = Rouge()
     texts_list = corpus()
     # for texts in tqdm(texts_list):
     #     source, target = pseudo_summary(texts)
@@ -113,6 +111,6 @@ if __name__=='__main__':
     texts_list = texts_list[75467:]
     with open('abstract.json', 'a+', encoding='utf-8') as f:
         for texts in tqdm(texts_list):
-            source, target = pseudo_summary(texts)
+            source, target = pseudo_summary(texts, rouge)
             f.write(json.dumps([source, target], ensure_ascii=False) + '\n')
         # f.write(json.dumps([source, target], ensure_ascii=False) + '\n')
