@@ -6,7 +6,8 @@
 4. dapt_train为训练所需要的脚本以及配置文件
 5. log存放训练过程的log日志
 ---
-其中dapt_data以及dapt_model由于文件过大，不存放在github中，整理完毕后会存放在网盘中，使用时单独下载放入即可
+其中dapt_data以及dapt_model由于文件过大，不存放在github中，整理完毕后会存放在网盘中，使用时单独下载放入即可,dapt_data以及dapt_model链接:https://bhpan.buaa.edu.cn:443/link/3AD744EBD635FF154C72C5E56A5AAF3F
+有效期限：2022-06-30 23:59
 ---
 dapt试验步骤
 1. 使用全样本构建样本对，也就是训练一个自编码器（再最开始尝试，看对模型有没有提升）
