@@ -5,9 +5,8 @@
 
 import sys
 sys.path.append("../../")
-print(sys.path)
 from mytransformers.models.t5 import T5Model
     
 
 if __name__=="__main__":
-    m = T5Model()
+    m = T5Model.from_pretrained("../dapt_model/mt5-small-simplify")
