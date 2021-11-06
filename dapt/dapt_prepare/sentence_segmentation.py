@@ -12,11 +12,13 @@ class SentenceSegmentation:
         self.seg_corpus_path = self.config["seg_corpus_path"]
 
     def generate(self):
+        punc = '''\n。.；;：:，,（）()'''
         texts_list = self.__corpus()
         with open(self.seg_corpus_path, 'a+', encoding='utf-8') as f:
             for texts in tqdm(texts_list):
                 seg_sen = self.__cut_sentence(texts, 1, u'\n。.；;：:，,（）()')
-                f.write(json.dumps(seg_sen, ensure_ascii=False) + '\n')
+                del_punc_seg_sen = self.__delete_punc(seg_sen)
+                f.write(json.dumps(del_punc_seg_sen, ensure_ascii=False) + '\n')
 
     def __corpus(self):
         """读取clear语料
@@ -52,6 +54,14 @@ class SentenceSegmentation:
             return texts
         else:
             return [text]
+
+    def __delete_punc(self, sentences_list):
+        D = []
+        add_punc = '''\n。.；;：:，,（）()'''
+        for sen in sentences_list:
+            res = re.sub("[%s]+" % add_punc, "", sen)
+            D.append(res)
+        return D
 
 
 if __name__ == '__main__':
