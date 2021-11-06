@@ -1,4 +1,4 @@
-# dapt训练脚本
+# dapt训练脚本(未更新)
 ---
 1. train_autoencoder是根据自编码器数据集来进行dapt
 2. train_permutation是打乱数据顺序来进行dapt
