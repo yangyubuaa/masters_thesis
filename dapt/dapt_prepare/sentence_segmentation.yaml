@@ -1,0 +1,2 @@
+clear_corpus_path: dapt_data/corpus.json
+seg_corpus_path: dapt_data/seg_corpus.json
