@@ -1,3 +1,0 @@
-path_config:
-  train_data_path: ../dapt_data/generate_dapt_corpus_paper_principal.json
-  

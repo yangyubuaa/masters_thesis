@@ -24,14 +24,33 @@ class GetData:
         if self.stage == "pegasus_source_edition":
             dataset = self.pegasus_source_edition_generate()
         # 我们的版本
-        elif self.stage == "pegasus_our_edition":
-            dataset = self.pegasus_our_edition_generate()
+        elif self.stage == "pegasus_permute_edition":
+            dataset = self.pegasus_permute_edition_generate()
+        
+        store_name = "pta_"
+        if self.is_autoencoder:
+            store_name = store_name + "autoendocer_"
+        else:
+            store_name = store_name + ""
+        if self.stage == "pegasus_source_edition":
+            store_name = store_name + "source_"
+        else:
+            store_name = store_name + "permute_"
+        store_name = store_name + "gsr_" + str(self.gsr)
+        if self.is_random_mask:
+            store_name = store_name + "_rmrate_" + str(self.random_mask_rate)
+        store_name = store_name + "json"
+        print(store_name)
+
     def autoencnder_edition_generate(self):
-        return 
+        return None
     def pegasus_source_edition(self):
         if is_random_mask:
+            return None
         else:
-
-    def pegasus_our_edition(self):
+            return None
+    def pegasus_permute_edition(self):
         if is_random_mask:
+            return None
         else:
+            return None

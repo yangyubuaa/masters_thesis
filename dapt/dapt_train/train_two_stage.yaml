@@ -1,0 +1,8 @@
+data_path:
+        prepared_data_path: ../dapt_data/prepared_data.json
+        autoencoder_data_path: ../dapt_data/autoencoder_data.json
+is_autoencoder: True
+stage: pegasus_source_edition
+gsr: 0.3
+is_random_mask: False
+random_mask_rate: 0.2
