@@ -3,3 +3,4 @@ dapt/dapt_data
 *.log
 *.pyc
 simplify/simplified_model/mt5-small-simplify/
+dapt/dapt_model
