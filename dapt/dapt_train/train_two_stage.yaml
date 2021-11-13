@@ -1,5 +1,5 @@
 data_path:
-        prepared_data_path: ../dapt_data/prepared_data.json
+        prepared_data_path: ../dapt_data/score_generate.json
         autoencoder_data_path: ../dapt_data/autoencoder_data.json
 is_autoencoder: True
 stage: pegasus_source_edition

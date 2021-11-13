@@ -1,7 +1,7 @@
 data_path:
         prepared_data_path: ../dapt_data/score_generate.json
         autoencoder_data_path: ../dapt_data/autoencoder_data.json
-is_autoencoder: True
+is_autoencoder: False
 stage: pegasus_source_edition
 gsr: 0.3
 is_random_mask: False

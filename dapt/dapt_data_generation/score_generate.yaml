@@ -1,0 +1,4 @@
+clear_corpus_path: ../dapt_data/seg_corpus.json
+pseudo_summary_path: ../dapt_data/score_corpus.json
+params:
+  gsr: 0.2
