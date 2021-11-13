@@ -14,6 +14,12 @@ from model_principal import T5PrincipalPta
 
 from getdata import GetData
 
+from tqdm import tqdm
+
+import logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+
 class PtaDataset(Dataset):
     def __init__(self):
         pass
@@ -30,6 +36,14 @@ class Trainer:
 
     def train(self):
         self.dataset = self.__dataset()
+        self.dataloader = Dataloader(dataset=self.dataset, batch_size=64, shuffle=True)
+        
+        epoch = self.config["epoch"]
+        lr = self.config["learning_rate"]
+
+        for i in tqdm(range(epoch)):
+            pass
+
 
     def evaluate(self):
         pass
@@ -38,7 +52,7 @@ class Trainer:
         '''根据soure_data_generator生成的数据进行tokenizer并封装为Dataset类
         '''
         tokenizer = T5Tokenizer(self.config["model_path"])
-                
+
 
 
 if __name__=="__main__":

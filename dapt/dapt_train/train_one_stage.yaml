@@ -7,3 +7,7 @@ stage: pegasus_source_edition
 gsr: 0.3
 is_random_mask: False
 random_mask_rate: 0.2
+
+
+epoch: 100
+learning_rate: 0.0002
