@@ -1,18 +1,14 @@
-# dapt训练脚本(未更新)
+# dapt训练脚本
 ---
-1. train_autoencoder是根据自编码器数据集来进行dapt
-2. train_permutation是打乱数据顺序来进行dapt
-3. train_principal是根据pegasus论文的ind/origin方式进行dapt
-
-三个训练文件分别有对应的yaml配置文件
+1. train_one_stage.py 为不含autoencoder的训练过程
+2. train_two_stage.py 为含autoencoder的训练过程
+3. train_one_stage.yaml 为训练过程超参数配置文件
+4. train_two_stage.yaml 为训练过程超参数配置文件
+5. run_train_one_stage.sh & run_train_two_stage.sh 为启动脚本
 ---
-1. model_principal、model_permutation、model_autoencoder三种训练方法对应的模型文件
+model_principal.py & model_principal.yaml 为模型代码以及配置文件
 ---
-getdata.py里面包含了数据获取类，根据数据路径构建数据集类
+getdata.py 从score_corpus.json中根据不同试验策略构建训练样本
+getdata.yaml 为策略配置文件
 ---
-evaluator.py里面包含了训练过程评估器,传入参数进行评估以及log打印
----
-1. run_principal.sh
-2. run_permutation.sh
-3. run_autoencoder.sh
-以上三个为运行脚本，会进行训练，并将训练日志输出到对应名称的log文件中
+evaluator.py为训练过程评估器
